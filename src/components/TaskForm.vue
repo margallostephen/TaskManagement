@@ -1,56 +1,57 @@
 <template>
   <div
     v-if="formOpen"
-    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 md:py-10 z-10"
+    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
   >
-    <div class="bg-white p-8 w-full h-full sm:w-3/4 sm:h-auto overflow-y-auto">
-      <div class="flex justify-between">
-        <h2 class="text-2xl font-bold">{{ this.formType }} Task</h2>
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">{{ formType }} Task</h2>
         <button
           @click="toggleForm"
-          class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold h-fit py-2 px-4 rounded transition-transform duration-300 hover:scale-105"
+          class="text-gray-600 hover:text-gray-800 transition-colors duration-300 focus:outline-none"
         >
-          <i class="bi bi-x-lg"></i>
+          <i class="bi bi-x-lg text-xl"></i>
         </button>
       </div>
-      <form @submit.prevent="addTask">
-        <div class="my-5">
-          <label class="block text-lg font-bold mb-2" for="title">
-            Task Title
-          </label>
+      <form @submit.prevent="fetchData">
+        <div class="mb-6">
+          <label for="title" class="block text-lg font-bold mb-2"
+            >Task Title</label
+          >
           <input
-            class="shadow appearance-none border rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:outline-blue-600"
             v-model="title"
             type="text"
+            id="title"
+            class="border rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div class="mb-4">
-          <label class="block text-lg font-bold mb-2" for="description">
-            Task Description
-          </label>
+        <div class="mb-6">
+          <label for="description" class="block text-lg font-bold mb-2"
+            >Task Description</label
+          >
           <textarea
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:outline-blue-600"
             v-model="description"
+            id="description"
             rows="5"
+            class="border rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           ></textarea>
         </div>
-        <div class="mb-4">
-          <label class="block text-lg font-bold mb-2"> Task Status </label>
-          <div class="flex gap-5 flex-wrap">
+        <div class="mb-6">
+          <label class="block text-lg font-bold mb-2">Task Status</label>
+          <div class="flex gap-5">
             <label class="inline-flex items-center">
               <input
                 type="radio"
-                class="form-radio w-5 h-5 text-blue-500"
+                class="form-radio h-4 w-4"
                 v-model="status"
                 value="pending"
-                checked
               />
               <span class="ml-2">Pending</span>
             </label>
             <label class="inline-flex items-center">
               <input
                 type="radio"
-                class="form-radio w-5 h-5 text-yellow-500"
+                class="form-radio h-4 w-4"
                 v-model="status"
                 value="prioritize"
               />
@@ -58,17 +59,24 @@
             </label>
           </div>
         </div>
-        <div class="flex items-center justify-end">
+        <div class="flex justify-end">
           <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            :class="[
+              'btn',
+              formType == 'Add'
+                ? 'bg-blue-500 hover:bg-blue-600'
+                : 'bg-yellow-400 hover:bg-yellow-500',
+            ]"
+            class="px-4 py-2 text-sm font-medium text-white rounded-lg transition duration-300 ease-in-out"
             type="submit"
           >
-            Add
+            {{ formType == "Add" ? "Add" : "Update" }}
           </button>
         </div>
       </form>
     </div>
   </div>
+
   <TaskList ref="TaskList" />
 </template>
 
@@ -76,29 +84,40 @@
 export default {
   data() {
     return {
-      formType: "",
       formOpen: false,
+      formType: "",
+      taskId: 0,
       title: "",
       description: "",
-      status: "pending",
+      status: "",
     };
   },
-  computed: {},
-  emits: ["taskAdded"],
+  emits: ["fetchData"],
   methods: {
     toggleForm() {
       this.formOpen = !this.formOpen;
     },
-    addTask() {
-      this.$emit("taskAdded", {
+    fetchData() {
+      if (!this.title.trim() || !this.description.trim()) {
+        return;
+      }
+
+      this.$emit("fetchData", {
+        id: this.formType == "Add" ? "" : this.taskId,
         title: this.title,
         description: this.description,
         status: this.status,
+        created: new Date().toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }),
+        done: " ",
       });
 
       this.title = "";
       this.description = "";
-      this.status = "pending";
+      this.status = "";
 
       this.toggleForm();
     },

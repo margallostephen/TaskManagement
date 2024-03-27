@@ -1,30 +1,50 @@
 <template>
   <WebHeader />
-  <div class="container mx-auto p-2.5">
-    <div class="w-full flex justify-end gap-2 text-md font-medium">
-      <button
-        v-on:click="toggleForm"
-        class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
-      >
-        <i class="bi bi-plus-circle"></i> Add
-      </button>
-      <button
-        class="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
-      >
-        <i class="bi bi-check-circle"></i>
-        Done
-      </button>
-      <button
-        class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
-        v-on:click="handleTaskDelete"
-      >
-        <i class="bi bi-x-circle"></i>
-        Delete
-      </button>
+  <div class="container mx-auto p-4">
+    <div
+      class="w-full flex flex-col lg:flex-row justify-between items-center mb-4"
+    >
+      <div class="mb-4 lg:mb-0">
+        <p class="text-lg font-semibold text-gray-800">
+          Total Tasks: {{ taskCount }}
+        </p>
+        <p class="text-lg font-semibold text-gray-800">
+          Completed Tasks:
+          {{ completedCount }}
+        </p>
+      </div>
+      <div class="flex gap-4 items-center">
+        <button
+          @click="toggleForm('Add')"
+          class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300"
+        >
+          <i class="bi bi-plus-circle"></i> Add Task
+        </button>
+        <button
+          v-if="taskCount > 0"
+          @click="handleTaskDone"
+          class="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors duration-300"
+        >
+          <i class="bi bi-check-circle"></i> Mark Done
+        </button>
+        <button
+          v-if="taskCount > 0"
+          @click="handleTaskDelete"
+          class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors duration-300"
+        >
+          <i class="bi bi-x-circle"></i> Remove
+        </button>
+      </div>
     </div>
-    <TaskList ref="taskList" />
+
+    <TaskList
+      @taskCountChanged="handleTaskCountChanged"
+      @completedCountChanged="handleCompletedTaskCount"
+      @openUpdateForm="toggleForm"
+      ref="taskList"
+    />
   </div>
-  <TaskForm @taskAdded="handleTaskAdded" ref="taskForm" />
+  <TaskForm @fetchData="handleFetchData" ref="taskForm" />
 </template>
 
 <script>
@@ -32,16 +52,36 @@ import TaskForm from "../components/TaskForm.vue";
 
 export default {
   components: { TaskForm },
+  data() {
+    return {
+      taskCount: 0,
+      completedCount: 0,
+    };
+  },
   methods: {
-    toggleForm() {
-      this.$refs.taskForm.formType = "Add";
+    toggleForm(formType, task) {
+      const { id, title, description, status } = task || {};
+      this.$refs.taskForm.formType = formType;
+      this.$refs.taskForm.taskId = formType == "Update" ? id : "";
+      this.$refs.taskForm.title = formType == "Update" ? title : "";
+      this.$refs.taskForm.description = formType == "Update" ? description : "";
+      this.$refs.taskForm.status = formType == "Update" ? status : "pending";
       this.$refs.taskForm.toggleForm();
     },
-    handleTaskAdded(task) {
-      this.$refs.taskList.addTask(task);
+    handleFetchData(task) {
+      this.$refs.taskList.handleData(task);
+    },
+    handleTaskDone() {
+      this.$refs.taskList.doneTask();
     },
     handleTaskDelete() {
       this.$refs.taskList.deleteTask();
+    },
+    handleTaskCountChanged(newCount) {
+      this.taskCount = newCount;
+    },
+    handleCompletedTaskCount(completedCount) {
+      this.completedCount = completedCount;
     },
   },
 };

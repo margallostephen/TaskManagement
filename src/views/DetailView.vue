@@ -1,9 +1,22 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <WebHeader />
+  <div class="container mx-auto p-4">
+    <TaskDetails
+      :title="$route.params.title"
+      :status="$route.params.status"
+      :done="$route.params.done"
+      :created="$route.params.created"
+      :description="$route.params.description"
+    />
   </div>
 </template>
 
 <script>
-export default {};
+import TaskDetails from "../components/TaskDetails.vue";
+
+export default {
+  components: {
+    TaskDetails,
+  },
+};
 </script>

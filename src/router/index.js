@@ -8,7 +8,7 @@ const routes = [
     component: ListView
   },
   {
-    path: '/task-detail',
+    path: '/task-details/:title/:status/:description/:done/:created',
     name: 'DetailView',
     component: () => import('../views/DetailView.vue')
   }
