@@ -1,48 +1,48 @@
 <template>
   <div
     v-if="formOpen"
-    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
+    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 md:py-10 z-10"
   >
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-8">
-      <div class="flex justify-between items-center mb-6">
+    <div
+      class="bg-white p-8 w-full h-full md:w-3/4 lg:h-fit lg:w-1/2 overflow-y-auto"
+    >
+      <div class="flex justify-between">
         <h2 class="text-2xl font-bold">{{ formType }} Task</h2>
         <button
           @click="toggleForm"
-          class="text-gray-600 hover:text-gray-800 transition-colors duration-300 focus:outline-none"
+          class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold h-fit py-2 px-4 rounded-lg transition-transform duration-300 hover:scale-105"
         >
-          <i class="bi bi-x-lg text-xl"></i>
+          <i class="bi bi-x-lg"></i>
         </button>
       </div>
       <form @submit.prevent="fetchData">
-        <div class="mb-6">
-          <label for="title" class="block text-lg font-bold mb-2"
-            >Task Title</label
-          >
+        <div class="my-5">
+          <label class="block text-lg font-bold mb-2" for="title">
+            Task Title
+          </label>
           <input
+            class="shadow appearance-none border rounded-lg w-full p-3 text-gray-700 leading-tight focus:outline-blue-600"
             v-model="title"
             type="text"
-            id="title"
-            class="border rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div class="mb-6">
-          <label for="description" class="block text-lg font-bold mb-2"
-            >Task Description</label
-          >
+        <div class="mb-4">
+          <label class="block text-lg font-bold mb-2" for="description">
+            Task Description
+          </label>
           <textarea
+            class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-600"
             v-model="description"
-            id="description"
             rows="5"
-            class="border rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           ></textarea>
         </div>
-        <div class="mb-6">
-          <label class="block text-lg font-bold mb-2">Task Status</label>
-          <div class="flex gap-5">
+        <div class="mb-4">
+          <label class="block text-lg font-bold mb-2"> Task Status </label>
+          <div class="flex gap-5 flex-wrap">
             <label class="inline-flex items-center">
               <input
                 type="radio"
-                class="form-radio h-4 w-4"
+                class="form-radio w-5 h-5 text-blue-500"
                 v-model="status"
                 value="pending"
               />
@@ -51,7 +51,7 @@
             <label class="inline-flex items-center">
               <input
                 type="radio"
-                class="form-radio h-4 w-4"
+                class="form-radio w-5 h-5 text-yellow-500"
                 v-model="status"
                 value="prioritize"
               />
@@ -59,15 +59,13 @@
             </label>
           </div>
         </div>
-        <div class="flex justify-end">
+        <div class="flex items-center justify-end">
           <button
             :class="[
-              'btn',
-              formType == 'Add'
-                ? 'bg-blue-500 hover:bg-blue-600'
-                : 'bg-yellow-400 hover:bg-yellow-500',
+              'bg-' + (formType == 'Add' ? 'blue-500' : 'yellow-400'),
+              'hover:bg-' + (formType == 'Add' ? 'blue-700' : 'yellow-500'),
             ]"
-            class="px-4 py-2 text-sm font-medium text-white rounded-lg transition duration-300 ease-in-out"
+            class="text-white font-bold py-2 px-4 rounded-lg transition-transform duration-300 hover:scale-105"
             type="submit"
           >
             {{ formType == "Add" ? "Add" : "Update" }}
@@ -76,7 +74,6 @@
       </form>
     </div>
   </div>
-
   <TaskList ref="TaskList" />
 </template>
 

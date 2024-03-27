@@ -6,14 +6,14 @@
     <li
       v-for="task in tasks"
       :key="task.id"
-      class="bg-white rounded-lg shadow-lg overflow-hidden"
+      class="bg-white rounded-lg shadow-xl overflow-hidden"
     >
-      <div class="px-6 py-4 flex justify-between items-center">
+      <div class="px-6 py-4 flex justify-between items-center flex-wrap gap-4">
         <div class="flex flex-col">
           <div class="flex items-center mb-2">
             <input
               type="checkbox"
-              class="form-checkbox text-blue-500 h-5 w-5 mr-2"
+              class="form-checkbox text-blue-500 h-4 w-4 mr-2"
               v-model="task.checked"
               v-show="task.status !== 'done'"
             />

@@ -7,7 +7,7 @@
     >
       <div
         class="rounded-md p-2 text-white text-sm font-medium h-fit w-fit flex items-center justify-center"
-        :class="status !== 'done' ? 'bg-violet-900' : 'bg-green-700'"
+        :class="status !== 'done' ? 'bg-purple-600' : 'bg-green-700'"
       >
         <p v-if="status !== 'done'">Created on {{ created }}</p>
         <p v-if="status === 'done'">Marked as Done on {{ done }}</p>
@@ -17,7 +17,7 @@
         :class="{
           'bg-green-600': status === 'done',
           'bg-yellow-400': status === 'prioritize',
-          'bg-red-700': status !== 'done' && status !== 'prioritize',
+          'bg-red-500': status !== 'done' && status !== 'prioritize',
         }"
       >
         <i
