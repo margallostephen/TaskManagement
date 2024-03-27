@@ -45,12 +45,6 @@
 
 <script>
 export default {
-  props: {
-    title: String,
-    status: String,
-    created: String,
-    done: String,
-    description: String,
-  },
+  props: ["title", "status", "created", "done", "description"],
 };
 </script>

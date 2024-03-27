@@ -36,7 +36,6 @@
         </button>
       </div>
     </div>
-
     <TaskList
       @taskCountChanged="handleTaskCountChanged"
       @completedCountChanged="handleCompletedTaskCount"

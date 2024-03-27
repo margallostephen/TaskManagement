@@ -104,7 +104,11 @@ export default {
         this.tasks.push(task);
       } else {
         const index = this.tasks.findIndex((t) => t.id === task.id);
-        if (index !== -1) Object.assign(this.tasks[index], task);
+        if (index != -1) {
+          this.tasks[index].title = task.title;
+          this.tasks[index].description = task.description;
+          this.tasks[index].status = task.status;
+        }
       }
     },
     deleteTask() {
